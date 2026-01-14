@@ -2,6 +2,8 @@ from . import db
 from flask_security.core import UserMixin, RoleMixin
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List
+from datetime import datetime, timezone
+from sqlalchemy import DateTime
 
 
 roles_users = db.Table(
@@ -22,7 +24,9 @@ class User(db.Model, UserMixin):
     __tablename__ = "user"
     id: Mapped[int] = mapped_column(primary_key=True)           # type: ignore
     username: Mapped[str] = mapped_column(db.String(20), unique=True, nullable=False)           # type: ignore
-    password: Mapped[str] = mapped_column(db.String(100), nullable=False)           # type: ignore
+    email: Mapped[str] = mapped_column(db.String(100), unique=True, nullable=False)           # type: ignore
+    password: Mapped[str] = mapped_column(db.String(255), nullable=False)           # type: ignore
+    confirmed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)           # type: ignore
     active: Mapped[bool] = mapped_column(default=True)           # type: ignore
     fs_uniquifier: Mapped[str] = mapped_column(db.String(255), unique=True, nullable=False)           # type: ignore
     roles: Mapped[List[Role]] = relationship(secondary=roles_users, backref="users")           # type: ignore
