@@ -38,7 +38,7 @@ def create_app(test_config=None):
     app.config["SECURITY_USERNAME_REQUIRED"] = True
     # Configure Flask Security(Confirmable)
     app.config["SECURITY_CONFIRMABLE"] = True
-    app.config["SECURITY_POST_CONFIRM_VIEW"] = "auth/register.html"
+    app.config["SECURITY_POST_CONFIRM_VIEW"] = "/login"
     # Configure Flask Mail
     app.config["MAIL_SERVER"] = "smtp.gmail.com"
     app.config["MAIL_PORT"] = 587
@@ -58,5 +58,8 @@ def create_app(test_config=None):
     # Setup Flask-Security
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security = Security(app, user_datastore)
+
+    from .roles import setup_roles_signals
+    setup_roles_signals(app)
 
     return app
