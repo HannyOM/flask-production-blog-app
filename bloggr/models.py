@@ -35,3 +35,14 @@ class User(db.Model, UserMixin):
     active: Mapped[bool] = mapped_column(default=True)           # type: ignore
     fs_uniquifier: Mapped[str] = mapped_column(db.String(255), unique=True, nullable=False)           # type: ignore
     roles: Mapped[List[Role]] = relationship(secondary=roles_users, back_populates="users")           # type: ignore
+    posts: Mapped[List[Post]] = relationship(backref="author", lazy=True)
+
+
+# Creates a "Post" table with five columns.
+class Post(db.Model):
+    __tablename__ = "post"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(db.String(50), nullable=False)
+    content: Mapped[str] = mapped_column(nullable=False)
+    author_id: Mapped[int] = mapped_column(db.ForeignKey("user.id"), nullable=False)            # "ForeignKey" points to the "id" column in the "User" table.
+    date: Mapped[datetime] = mapped_column(db.Date, nullable=False)
