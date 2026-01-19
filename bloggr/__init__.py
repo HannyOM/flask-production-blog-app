@@ -5,8 +5,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_security.core import Security
 from flask_security.datastore import SQLAlchemyUserDatastore 
-# from flask_security.decorators import auth_required
-# from flask_security.utils import hash_password
 from flask_mail import Mail
 
 
@@ -59,7 +57,16 @@ def create_app(test_config=None):
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security = Security(app, user_datastore)
 
+    # Automatically assign registered user with "user" role.
     from .roles import setup_roles_signals
     setup_roles_signals(app)
+
+    # Import blueprints
+    from . import blog
+    
+    # Register blueprints
+    app.register_blueprint(blog.bp)
+    app.add_url_rule("/",
+                     endpoint="index")          # Associates the endpoint name 'index' with the '/' url, so that url_for('index') or url_for('blog.index') will both work, generating the same / URL.
 
     return app
