@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Post</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+
+<body>
+    <h1>edit page</h1>
+    <form action="{{ url_for('blog.save', post_id=editing_post.id) }}" method="post">
+        <label for="new_post_title">Title</label>
+        <br>
+        <input name="new_post_title" type="text" value="{{ editing_post.title }}">
+        <br>
+        <label for="new_post_content">Post</label>
+        <br>
+        <textarea name="new_post_content" id="">{{ editing_post.content }}</textarea>
+        <br>
+        <button type="submit">Save</button>
+        <a href="{{ url_for('blog.index') }}">Cancel</a>
+        {% for message in get_flashed_messages() %}
+        <div class="flash grey label">{{ message }}</div>
+        {% endfor %}
+    </form>
+</body>
+
+</html>

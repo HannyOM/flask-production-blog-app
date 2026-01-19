@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Index</title>
 </head>
 
 <body>
@@ -21,7 +21,10 @@
         <br>
         Author: {{ each_post.author.username }}
         <br>
-        {{ each_post.date.strftime(%d-%m-%Y") }}
+        {{ each_post.date.strftime("%d-%m-%Y") }}
+        <br>
+        <a href="/edit/{{each_post.id}}">Edit</a>
+        <a href="/delete/{{each_post.id}}">Delete</a>
         <br>
         {% endfor %}
     </p>
