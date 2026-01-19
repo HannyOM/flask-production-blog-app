@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    {% if user.is_authenticated %}
+    <h4>Welcome, {{user.username}}</h4>
+    {% endif %}
+
+    <p>
+        {% for each_post in all_posts %}
+        <br>
+        {{ each_post.title }}
+        <br>
+        {{ each_post.content }}
+        <br>
+        Author: {{ each_post.author.username }}
+        <br>
+        {{ each_post.date.strftime(%d-%m-%Y") }}
+        <br>
+        {% endfor %}
+    </p>
+
+</body>
+
+</html>
