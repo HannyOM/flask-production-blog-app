@@ -16,7 +16,7 @@ def setup_roles_signals(app):
             db.session.commit()
             print("Created 'user' role in database.")
 
-        # 3. Assign it to the user
+        # 3. Assign it to the user.
         if role not in user.roles:
             user.roles.append(role)
             db.session.commit()
