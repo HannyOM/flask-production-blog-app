@@ -10,7 +10,10 @@
 <body>
     {% if user.is_authenticated %}
     <h4>Welcome, {{user.username}}</h4>
+    <a href="{{ url_for('security.logout') }}">Logout</a>
     {% endif %}
+    <br>
+    <a href="{{url_for('blog.new')}}">New Post</a>
 
     <p>
         {% for each_post in all_posts %}
