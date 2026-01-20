@@ -25,16 +25,16 @@ def create_app(test_config=None):
     # Configure Flask SQLAlchemy
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    # Configure Flask Security(General)
+    # Configure Flask Security (General)
     app.config["SECURITY_PASSWORD_SALT"] = os.environ.get("SECURITY_PASSWORD_SALT")
     app.config["REMEMBER_COOKIE_SAMESITE"] = "strict"
     app.config["SESSION_COOKIE_SAMESITE"] = "strict"
-    # Configure Flask Security(Registerable)
+    # Configure Flask Security (Registerable)
     app.config["SECURITY_REGISTERABLE"] = True
     app.config["SECURITY_EMAIL_SUBJECT_REGISTER"] = "User Registration"
     app.config["SECURITY_USERNAME_ENABLE"] = True
     app.config["SECURITY_USERNAME_REQUIRED"] = True
-    # Configure Flask Security(Confirmable)
+    # Configure Flask Security (Confirmable)
     app.config["SECURITY_CONFIRMABLE"] = True
     app.config["SECURITY_POST_CONFIRM_VIEW"] = "/login"
     # Configure Flask Mail

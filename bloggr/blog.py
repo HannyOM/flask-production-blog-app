@@ -10,21 +10,21 @@ bp = Blueprint("blog",          # Names the blueprint.
                __name__)            # Lets the blueprint know where it is defined.
 
 
-# INDEX ROUTE
+# INDEX VIEW
 @bp.route("/")
 def index():
     all_posts = Post.query.all()
     return render_template("blog/index.html", all_posts=all_posts, user=current_user)
 
 
-# NEW POST ROUTE
+# NEW POST VIEW
 @bp.route("/new", methods=["GET"])
 @login_required
 def new():
     return render_template("blog/new.html")
 
 
-# ADD POST ROUTE
+# ADD POST VIEW
 @bp.route("/add", methods=["GET", "POST"])
 @login_required
 def add():
@@ -49,7 +49,7 @@ def add():
     return render_template("blog/new.html")
 
 
-# EDIT POST ROUTE
+# EDIT POST VIEW
 @bp.route("/edit/<int:post_id>", methods=["GET", "POST"])
 @login_required
 def edit(post_id):
@@ -59,7 +59,7 @@ def edit(post_id):
     return render_template("blog/edit.html", editing_post=editing_post)
 
 
-# SAVE POST ROUTE
+# SAVE POST VIEW
 @bp.route("/save/<int:post_id>", methods=["POST"])
 @login_required
 def save(post_id):
@@ -84,7 +84,7 @@ def save(post_id):
     return redirect(url_for("blog.index"))
 
 
-# DELETE POST ROUTE
+# DELETE POST VIEW
 @bp.route("/delete/<int:post_id>", methods=["GET"])
 @login_required
 def delete(post_id):
