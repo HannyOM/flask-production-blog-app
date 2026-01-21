@@ -19,31 +19,37 @@ mail = Mail()
 def create_app(test_config=None):
     app = Flask(__name__)           # Identifies the root path for resources like templates and static files.
     
-    # Configure application.
-    app.config["DEBUG"] = os.environ.get("DEBUG") == "1"
-    app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
-    # Configure Flask SQLAlchemy
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    # Configure Flask Security (General)
-    app.config["SECURITY_PASSWORD_SALT"] = os.environ.get("SECURITY_PASSWORD_SALT")
-    app.config["REMEMBER_COOKIE_SAMESITE"] = "strict"
-    app.config["SESSION_COOKIE_SAMESITE"] = "strict"
-    # Configure Flask Security (Registerable)
-    app.config["SECURITY_REGISTERABLE"] = True
-    app.config["SECURITY_EMAIL_SUBJECT_REGISTER"] = "User Registration"
-    app.config["SECURITY_USERNAME_ENABLE"] = True
-    app.config["SECURITY_USERNAME_REQUIRED"] = True
-    # Configure Flask Security (Confirmable)
-    app.config["SECURITY_CONFIRMABLE"] = True
-    app.config["SECURITY_POST_CONFIRM_VIEW"] = "/login"
-    # Configure Flask Mail
-    app.config["MAIL_SERVER"] = "smtp.gmail.com"
-    app.config["MAIL_PORT"] = 587
-    app.config["MAIL_USE_TLS"] = True
-    app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
-    app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
-    app.config["MAIL_DEFAULT_SENDER"] = os.environ.get("MAIL_DEFAULT_SENDER")
+    app.config.from_mapping(
+        # Configure application.
+        DEBUG = os.environ.get("DEBUG") == "1",
+        SECRET_KEY = os.environ.get("SECRET_KEY"),
+        # Configure Flask SQLAlchemy
+        SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL"),
+        SQLALCHEMY_TRACK_MODIFICATIONS = False,
+        # Configure Flask Security (General)
+        SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT"),
+        REMEMBER_COOKIE_SAMESITE = "strict",
+        SESSION_COOKIE_SAMESITE = "strict",
+        # Configure Flask Security (Registerable)
+        SECURITY_REGISTERABLE = True,
+        SECURITY_EMAIL_SUBJECT_REGISTER = os.environ.get("SECURITY_EMAIL_SUBJECT_REGISTER"),
+        SECURITY_USERNAME_ENABLE = True,
+        SECURITY_USERNAME_REQUIRED = True,
+        # Configure Flask Security (Confirmable)
+        SECURITY_CONFIRMABLE = True,
+        SECURITY_POST_CONFIRM_VIEW = "/login",
+        # Configure Flask Mail
+        MAIL_SERVER = "smtp.gmail.com",
+        MAIL_PORT = 587,
+        MAIL_USE_TLS = True,
+        MAIL_USERNAME = os.environ.get("MAIL_USERNAME"),
+        MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD"),
+        MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER"),
+    )
+
+    # Override with test_config if it exists.
+    if test_config is not None:
+        app.config.update(test_config)
 
     # Initialize extensions (with app object).
     db.init_app(app)
