@@ -50,3 +50,10 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = ["bloggr"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+filterwarnings = [
+    "ignore::DeprecationWarning:testcontainers.*:"
+]
