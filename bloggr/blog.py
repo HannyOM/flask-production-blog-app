@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, abort
 from .models import Post
-from flask_login import current_user, login_required
+from flask_security.decorators import auth_required, roles_accepted
+from flask_login import current_user
 from . import db
 from datetime import date
 
@@ -19,14 +20,15 @@ def index():
 
 # NEW POST VIEW
 @bp.route("/new", methods=["GET"])
-@login_required
+@auth_required()
+@roles_accepted("admin", "editor")
 def new():
     return render_template("blog/new.html")
 
 
 # ADD POST VIEW
 @bp.route("/add", methods=["GET", "POST"])
-@login_required
+@auth_required()
 def add():
     if request.method == "POST":            # Gets the user input.
         title = request.form.get("post_title")
@@ -51,7 +53,7 @@ def add():
 
 # EDIT POST VIEW
 @bp.route("/edit/<int:post_id>", methods=["GET", "POST"])
-@login_required
+@auth_required()
 def edit(post_id):
     editing_post = db.get_or_404(Post, post_id)
     if editing_post.author_id != current_user.id: # type: ignore
@@ -61,7 +63,7 @@ def edit(post_id):
 
 # SAVE POST VIEW
 @bp.route("/save/<int:post_id>", methods=["POST"])
-@login_required
+@auth_required()
 def save(post_id):
     editing_post = Post.query.filter_by(id=post_id).first()
     if request.method == "POST":
@@ -86,7 +88,7 @@ def save(post_id):
 
 # DELETE POST VIEW
 @bp.route("/delete/<int:post_id>", methods=["GET"])
-@login_required
+@auth_required()
 def delete(post_id):
     deleting_post = db.get_or_404(Post, post_id)
     if deleting_post.author_id != current_user.id: # type: ignore

@@ -4,7 +4,7 @@ from bloggr import create_app
 from bloggr import db as _db
 from flask_security.utils import hash_password
 from bloggr.models import User
-
+from flask_security.utils import login_user
 
 # Start the Postgres Container once for the entire test run
 @pytest.fixture(scope="session")
@@ -63,11 +63,18 @@ class AuthActions:
         self._client = client
 
     def login(self, email="testmail@gmail.com", password="test_password"):
-        return self._client.post("/login", data={"email": email, "password": password})
+        return self._client.post(
+            "/login",
+            data={
+                "email": email,
+                "password": password
+            },
+            follow_redirects=True
+        )
 
     def logout(self):
-        return self._client.get("/logout")
-    
+        return self._client.get("/logout", follow_redirects=True)
+
 @pytest.fixture
 def auth(client):
     return AuthActions(client)

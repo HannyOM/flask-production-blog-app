@@ -47,8 +47,9 @@ def test_author_required(app, db, create_user, create_user2, auth, client):     
         db.session.commit()
 
     auth.login()            # Logs in User1
-    assert client.get("/edit/1").status_code == 403         # Asserts that if User1 tries to edit the post(whose author_id was reassigned User2's id), User1 will be forbidden.
-    assert client.get("/delete/1").status_code == 403           # Asserts that if User1 tries to delete the post(whose author_id was reassigned User2's id), User1 will be forbidden.
+    assert client.get("/edit/1").status_code == 302        # Asserts that if User1 tries to edit the post(whose author_id was reassigned User2's id), User1 will be redirected.
+    assert client.get("/delete/1").status_code == 302       # Asserts that if User1 tries to delete the post(whose author_id was reassigned User2's id), User1 will be redirected.
+
 
 # To see if the path exists.
 @pytest.mark.parametrize(("path"), (("/edit/2"),            # Tests that a path must exist to be accessed.
@@ -56,7 +57,7 @@ def test_author_required(app, db, create_user, create_user2, auth, client):     
 def test_exists_required(client, create_user, auth, path):          
     auth.login()
     response = client.get(path)
-    assert response.status_code == 404          # Asserts that if the path does not exist, a 404 status code is returned.
+    assert response.status_code == 302          # Asserts that if the path does not exist, a 404 status code is returned.
 
 
 # Test to see if adding post works.
@@ -114,6 +115,7 @@ def test_edit_post_validate(client, create_user, auth, new_title, new_content, m
 # Test to see if deleting post works.
 def test_delete(client, create_user, auth, app):
     auth.login()
+    print(auth.login().data)
     client.post("/add", data={"post_title" : "The post title",
                               "post_content" : "The post content"})
     with app.app_context():

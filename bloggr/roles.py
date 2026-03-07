@@ -7,11 +7,11 @@ def setup_roles_signals(app):
     @user_registered.connect_via(app)
     def assign_default_role(sender, user, **extra):
         # Find the "user" role.
-        role = Role.query.filter_by(name="user").first()
+        role = Role.query.filter_by(name="reader").first()
         
         # Create "user" role if it doesn't exist.
         if not role:
-            role = Role(name="user", description="Can read and comment on posts.")
+            role = Role(name="reader", description="can only read posts.")
             db.session.add(role)
             db.session.commit()
             print("Created 'user' role in database.")

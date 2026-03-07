@@ -56,8 +56,8 @@ def create_app(test_config=None):
     migrate.init_app(app, db)
     mail.init_app(app)
 
-    # Import User model to create user table in database.
-    from .models import User, Role
+    # Import models to create tables in database.
+    from .models import User, Role, Post
 
     # Setup Flask-Security
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
