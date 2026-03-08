@@ -1,9 +1,10 @@
 import pytest
+from datetime import datetime
 from testcontainers.postgres import PostgresContainer
 from bloggr import create_app 
 from bloggr import db as _db
 from flask_security.utils import hash_password
-from bloggr.models import User
+from bloggr.models import User, Role
 from flask_security.utils import login_user
 
 # Start the Postgres Container once for the entire test run
@@ -42,18 +43,38 @@ def client(app):            # Creates a test client (simulates HTTP requests to 
 
 @pytest.fixture
 def create_user(db):
-    username, password, email, confirmed_at, fs_uniquifier = "test_username", "test_password", "testmail@gmail.com", "2026-01-21 13:00:22.479989+01", "acbc5Feafb4E6bc7b1ae6de5e07b2d89"
+    username, password, email = "test_username", "test_password", "testmail@gmail.com"
+    confirmed_at = datetime.fromisoformat("2026-01-21 13:00:22.479989")
+    fs_uniquifier = "acbc5Feafb4E6bc7b1ae6de5e07b2d89"
     hashed_password = hash_password(password)
+    
+    role = Role.query.filter_by(name="editor").first()
+    if not role:
+        role = Role(name="editor", description="Editor role")
+        db.session.add(role)
+        db.session.commit()
+    
     user = User(username=username, password=hashed_password, email=email, confirmed_at=confirmed_at, fs_uniquifier=fs_uniquifier)
+    user.roles.append(role)
     db.session.add(user)
     db.session.commit()
     return username, password, user, email, confirmed_at, fs_uniquifier
 
 @pytest.fixture
 def create_user2(db):
-    username2, password2, email2, confirmed_at2, fs_uniquifier2 = "test_username2", "test_password2", "testmail2@gmail.com", "2025-01-21 13:34:22.479989+01", "scbs3Feafb4E6bc7f2ae6de5e07b2d89"
+    username2, password2, email2 = "test_username2", "test_password2", "testmail2@gmail.com"
+    confirmed_at2 = datetime.fromisoformat("2025-01-21 13:34:22.479989")
+    fs_uniquifier2 = "scbs3Feafb4E6bc7f2ae6de5e07b2d89"
     hashed_password2 = hash_password(password2)
-    user2 = User(username=username2, password=hashed_password2, email=email2, confirmed_at=confirmed_at2, fs_uniquifier=fs_uniquifier2 )
+    
+    role = Role.query.filter_by(name="editor").first()
+    if not role:
+        role = Role(name="editor", description="Editor role")
+        db.session.add(role)
+        db.session.commit()
+    
+    user2 = User(username=username2, password=hashed_password2, email=email2, confirmed_at=confirmed_at2, fs_uniquifier=fs_uniquifier2)
+    user2.roles.append(role)
     db.session.add(user2)
     db.session.commit()
     return username2, password2, user2, email2, confirmed_at2, fs_uniquifier2

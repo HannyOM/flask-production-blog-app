@@ -63,6 +63,20 @@ def create_app(test_config=None):
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security = Security(app, user_datastore)
 
+    # Fix for Flask-Security 5.x: @auth_required() doesn't recognize password
+    # authentication as session auth. This sets fs_authn_via in each request
+    # if the user is authenticated via session.
+    from flask import request, session
+    from flask_login import current_user
+    from flask_security.utils import get_request_attr, set_request_attr
+
+    @app.before_request
+    def set_fs_authn_via():
+        if current_user.is_authenticated:
+            existing = get_request_attr("fs_authn_via")
+            if not existing:
+                set_request_attr("fs_authn_via", "session")
+
     # Automatically assign registered user with "user" role.
     from .roles import setup_roles_signals
     setup_roles_signals(app)
