@@ -13,8 +13,8 @@ This document defines the workflow Opencode must follow when designing the front
 You will be provided with:
 
 - A downloaded webpage `.html` file (usually from a Framer template)
-- `tailwind.config.js`
-- `design-tokens.json`
+- `template_tailwind.config.js` (consistent across different pages)
+- `design-tokens.json` (consistent across different pages)
 
 Your task is to analyze the design and translate it into a **componentized Tailwind + Flowbite frontend architecture**.
 
@@ -130,7 +130,7 @@ Do not generate HTML yet.
 
 Once the layout analysis is approved:
 
-Update the existing `tailwind.config.js` file to match the design system.
+Update the existing `tailwind.config.js` file with `template_tailwind.config.js` and to match the design system.
 
 Adjust:
 
@@ -150,7 +150,7 @@ Ensure the configuration matches values found in:
 
 # Phase 4 — Tailwind Design System Translation
 
-Convert the design into **reusable Tailwind utilities**.
+Convert the design into **reusable Tailwind utilities**. Also read the `design-tokens.json` file for this. 
 
 Define a clear design system.
 
@@ -205,7 +205,10 @@ Only create custom components if Flowbite does not provide a suitable one.
 
 All reusable UI components must be separated into template components.
 
-Create a `components` folder in the `templates` folder in the `bloggr` folder of the root directory, flask-blog-production-app.
+Check for a `components` folder in the `templates` folder in the `bloggr` folder of the root directory, flask-blog-production-app.
+
+If there is none, create a `components` folder in the `templates` folder in the `bloggr` folder of the root directory, flask-blog-production-app.
+
 In this folder, store the components.
 The structure will look like this:
 flask-blog-production-app/
@@ -254,10 +257,6 @@ Example:
 <div class="max-w-7xl mx-auto px-6">
   <section class="py-24">
     <!-- hero -->
-  </section>
-
-  <section class="py-24">
-    <!-- features -->
   </section>
 
   <section class="py-24">
