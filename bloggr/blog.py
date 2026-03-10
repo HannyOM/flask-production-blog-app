@@ -18,6 +18,20 @@ def index():
     return render_template("blog/index.html", all_posts=all_posts, user=current_user)
 
 
+# POST VIEW
+@bp.route("/post/<int:post_id>")
+def post(post_id):
+    post = db.get_or_404(Post, post_id)
+    return render_template("blog/post.html", post=post, user=current_user)
+
+
+# ARTICLES VIEW
+@bp.route("/articles")
+def articles():
+    all_posts = Post.query.all()
+    return render_template("blog/articles.html", all_posts=all_posts, user=current_user)
+
+
 # NEW POST VIEW
 @bp.route("/new", methods=["GET"])
 @auth_required()
