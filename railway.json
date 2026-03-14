@@ -6,9 +6,6 @@
   "deploy": {
     "numReplicas": 1,
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10,
-    "release": {
-      "command": "flask db upgrade"
-    }
+    "restartPolicyMaxRetries": 10
   }
 }

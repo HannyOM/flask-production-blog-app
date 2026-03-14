@@ -17,12 +17,14 @@ COPY wsgi.py ./
 COPY bloggr ./bloggr
 COPY migrations ./migrations
 COPY tailwind.config.js postcss.config.js ./
+COPY start.sh ./
 
 RUN pip install --no-cache-dir -e . && \
     npm ci --only=production=false && \
     npm run build-css
 
 ENV FLASK_ENV=production
+ENV FLASK_APP=wsgi
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
 
@@ -30,4 +32,6 @@ ENV PORT=8000
 
 EXPOSE 8000
 
-CMD gunicorn --bind 0.0.0.0:$PORT --workers 4 --timeout 120 --pythonpath /app wsgi:app
+RUN chmod +x start.sh
+
+CMD ["./start.sh"]

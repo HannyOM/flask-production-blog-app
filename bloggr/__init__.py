@@ -95,7 +95,7 @@ def create_app(config_class=None, test_config=None):
             if not existing:
                 set_request_attr("fs_authn_via", "session")
 
-    # Automatically assign registered user with "user" role.
+    # Automatically assign registered user with "editor" role.
     from .roles import setup_roles_signals
     setup_roles_signals(app)
 
