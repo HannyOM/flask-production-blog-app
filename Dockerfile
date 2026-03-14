@@ -13,6 +13,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && rm -rf /var/lib/apt/lists/*
 
 COPY pyproject.toml package.json package-lock.json ./
+COPY wsgi.py ./
 COPY bloggr ./bloggr
 COPY migrations ./migrations
 COPY tailwind.config.js postcss.config.js ./
@@ -23,7 +24,10 @@ RUN pip install --no-cache-dir -e . && \
 
 ENV FLASK_ENV=production
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app
+
+ENV PORT=8000
 
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "--timeout", "120", "wsgi:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:${PORT}", "--workers", "4", "--timeout", "120", "--pythonpath", "/app", "wsgi:app"]
