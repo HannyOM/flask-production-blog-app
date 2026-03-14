@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_security.core import Security
@@ -114,5 +114,11 @@ def create_app(config_class=None, test_config=None):
             return jsonify({"status": "healthy", "database": "connected"}), 200
         except Exception:
             return jsonify({"status": "unhealthy", "database": "disconnected"}), 503
+
+    @app.errorhandler(500)
+    def handle_500(error):
+        from flask import flash
+        flash("An error occurred. Please try again later.", "error")
+        return render_template("blog/home.html"), 500
 
     return app
