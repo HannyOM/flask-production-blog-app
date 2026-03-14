@@ -30,4 +30,4 @@ ENV PORT=8000
 
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:${PORT}", "--workers", "4", "--timeout", "120", "--pythonpath", "/app", "wsgi:app"]
+CMD gunicorn --bind 0.0.0.0:$PORT --workers 4 --timeout 120 --pythonpath /app wsgi:app
