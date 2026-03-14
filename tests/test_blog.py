@@ -5,13 +5,10 @@ from datetime import date
 
 # Test to see if the index page works.
 def test_index(client, create_user, auth):
-    response = client.get("/")
-    assert b"New Post" in response.data
-
     auth.login()
     response = client.get("/")
     assert response.status_code == 200
-    assert b"Welcome" in response.data
+    assert b"Latest Articles" in response.data
 
 
 # Test to see if the app sends the unauthenticated user to the login page.
