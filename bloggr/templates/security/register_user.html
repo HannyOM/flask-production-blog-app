@@ -4,116 +4,57 @@
 {% block title %}Register - Aidio{% endblock %}
 
 {% block content %}
-<div class="min-h-screen">
-    <!-- Navigation -->
-    <nav class="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center">
-                    <a href="{{ url_for('blog.index') }}" class="text-2xl font-bold text-black">
-                        Aidio
-                    </a>
-                </div>
-                <div class="hidden md:flex space-x-8 items-center">
-                    <a href="{{ url_for('blog.index') }}" class="text-black font-medium">Home</a>
-                    <a href="{{ url_for('blog.articles') }}" class="text-gray-600 hover:text-black transition-colors">Articles</a>
-                    <a href="{{ url_for('security.login') }}" class="text-gray-600 hover:text-black transition-colors">Login</a>
-                </div>
-                <!-- Mobile menu button -->
-                <div class="md:hidden">
-                    <button type="button" class="text-gray-600 hover:text-black p-2" data-collapse-toggle="mobile-menu">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                        </svg>
-                    </button>
-                </div>
+<section class="bg-gray-50 dark:bg-gray-900">
+    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <a href="{{ url_for('blog.index') }}" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+            Aidio
+        </a>
+        <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                    Create an account
+                </h1>
+
+                {% include "security/_messages.html" %}
+
+                <form action="{{ url_for_security('register') }}" method="post" name="register_user_form" class="space-y-4 md:space-y-6">
+                    {{ register_user_form.hidden_tag() }}
+                    {{ render_form_errors(register_user_form) }}
+
+                    <div>
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                        {{ render_field_with_errors(register_user_form.email, type="email", class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", required="") }}
+                    </div>
+
+                    {% if register_user_form.username %}
+                    <div>
+                        <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
+                        {{ render_field_with_errors(register_user_form.username, class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500") }}
+                    </div>
+                    {% endif %}
+
+                    <div>
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                        {{ render_field_with_errors(register_user_form.password, type="password", placeholder="••••••••", class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", required="") }}
+                    </div>
+
+                    {% if register_user_form.password_confirm %}
+                    <div>
+                        <label for="password_confirm" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm Password</label>
+                        {{ render_field_with_errors(register_user_form.password_confirm, type="password", placeholder="••••••••", class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", required="") }}
+                    </div>
+                    {% endif %}
+
+                    {{ render_field_errors(register_user_form.csrf_token) }}
+
+                    <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Create account</button>
+
+                    <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                        Already have an account? <a href="{{ url_for('security.login') }}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Sign in</a>
+                    </p>
+                </form>
             </div>
         </div>
-        <!-- Mobile menu -->
-        <div class="hidden md:hidden" id="mobile-menu">
-            <div class="px-4 pt-2 pb-4 space-y-2 border-t border-gray-200">
-                <a href="{{ url_for('blog.index') }}" class="block px-3 py-2 text-black font-medium">Home</a>
-                <a href="{{ url_for('blog.articles') }}" class="block px-3 py-2 text-gray-600 hover:text-black">Articles</a>
-                <a href="{{ url_for('security.login') }}" class="block px-3 py-2 text-gray-600 hover:text-black">Login</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Register Form -->
-    <main class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="bg-white rounded-lg shadow-md border border-gray-200 p-8">
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-black">Create Account</h1>
-                <p class="text-gray-600 mt-2">Join the Aidio community</p>
-            </div>
-
-            {% include "security/_messages.html" %}
-
-            <form action="{{ url_for_security('register') }}" method="post" name="register_user_form" class="space-y-5">
-                {{ register_user_form.hidden_tag() }}
-                {{ render_form_errors(register_user_form) }}
-
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                    {{ render_field_with_errors(register_user_form.email, class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors") }}
-                </div>
-
-                {% if register_user_form.username %}
-                <div>
-                    <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
-                    {{ render_field_with_errors(register_user_form.username, class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors") }}
-                </div>
-                {% endif %}
-
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
-                    {{ render_field_with_errors(register_user_form.password, class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors") }}
-                </div>
-
-                {% if register_user_form.password_confirm %}
-                <div>
-                    <label for="password_confirm" class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
-                    {{ render_field_with_errors(register_user_form.password_confirm, class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors") }}
-                </div>
-                {% endif %}
-
-                {{ render_field_errors(register_user_form.csrf_token) }}
-
-                <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                    Create Account
-                </button>
-            </form>
-
-            <div class="mt-6 text-center">
-                <p class="text-gray-600">
-                    Already have an account?
-                    <a href="{{ url_for('security.login') }}" class="text-blue-600 hover:text-blue-700 font-medium">
-                        Sign in here
-                    </a>
-                </p>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <p class="text-center text-gray-500 text-sm">
-                © 2026 Aidio. All rights reserved.
-            </p>
-        </div>
-    </footer>
-</div>
-
-<script>
-    // Mobile menu toggle
-    const mobileMenuButton = document.querySelector('[data-collapse-toggle="mobile-menu"]');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    if (mobileMenuButton) {
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-    }
-</script>
+    </div>
+</section>
 {% endblock %}
