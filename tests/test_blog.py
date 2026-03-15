@@ -28,8 +28,8 @@ def test_login_required(client, path, method):
 # Test to see if only the author of a post can edit it.
 def test_author_required(app, db, create_user, create_user2, auth, client):         # Tests that the author_id is required to determine who has permission to edit or delete a post. 
     with app.app_context():
-        username, password, user, email, confirmed_at, fs_uniquifier = create_user          # Creates User1.
-        username2, password2, user2, email2, confirmed_at2, fs_uniquifier2 = create_user2          # Creates User2.
+        username, password, user, email, fs_uniquifier = create_user          # Creates User1.
+        username2, password2, user2, email2, fs_uniquifier2 = create_user2          # Creates User2.
 
         post = Post(            # Creates a post from User1
                 title = "User1 Blog Post", # type:ignore

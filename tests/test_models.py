@@ -7,7 +7,7 @@ from datetime import date
 def test_create_user(app, create_user):          # Ensures a user can be created and added to the database.
     with app.app_context():         
         # Create a user and add to the database.
-        username, password, user, email, confirmed_at, fs_uniquifier = create_user
+        username, password, user, email, fs_uniquifier = create_user
 
         # Retreive the user and create assertions on the details.
         existing_user = User.query.filter_by(username=username).first()
@@ -20,7 +20,7 @@ def test_create_user(app, create_user):          # Ensures a user can be created
 def test_create_post(app, db, create_user):         # Ensures a post can be created, added to a database and linked to a user.
     with app.app_context():
         # Create a user and add to the database.
-        username, password, user, email, confirmed_at, fs_uniquifier = create_user
+        username, password, user, email, fs_uniquifier = create_user
 
         # Create a post and add to the database.
         post = Post(
@@ -45,7 +45,7 @@ def test_create_post(app, db, create_user):         # Ensures a post can be crea
 def test_post_author_relationship(app, db, create_user):         # Ensures existing_post.author returns the User instance (backref works).
     with app.app_context():
         # Create a user and add to the database.
-        username, password, user, email, confirmed_at, fs_uniquifier = create_user
+        username, password, user, email, fs_uniquifier = create_user
 
         # Create a post and add to the database.
         post = Post(
@@ -67,7 +67,7 @@ def test_post_author_relationship(app, db, create_user):         # Ensures exist
 def test_editor_posts_relationship(app, db, create_user):         # Ensures existing_user.posts returns all posts authored by the user.
     with app.app_context():
         # Create a user and add to the database.
-        username, password, user, email, confirmed_at, fs_uniquifier = create_user
+        username, password, user, email, fs_uniquifier = create_user
 
         # Create multiple posts and add to the database.
         post_one = Post(
