@@ -53,7 +53,7 @@ def create_user(db):
         db.session.add(role)
         db.session.commit()
     
-    user = User(username=username, password=hashed_password, email=email, fs_uniquifier=fs_uniquifier)
+    user = User(username=username, password=hashed_password, email=email, fs_uniquifier=fs_uniquifier, confirmed_at=datetime.utcnow())
     user.roles.append(role)
     db.session.add(user)
     db.session.commit()
@@ -71,7 +71,7 @@ def create_user2(db):
         db.session.add(role)
         db.session.commit()
     
-    user2 = User(username=username2, password=hashed_password2, email=email2, fs_uniquifier=fs_uniquifier2)
+    user2 = User(username=username2, password=hashed_password2, email=email2, fs_uniquifier=fs_uniquifier2, confirmed_at=datetime.utcnow())
     user2.roles.append(role)
     db.session.add(user2)
     db.session.commit()
