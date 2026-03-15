@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 
 revision: str = "remove_confirmed_at"
-down_revision: Union[str, None] = "2dee11f76643"
+down_revision: Union[str, None] = "add_confirmed_at"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
