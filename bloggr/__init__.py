@@ -34,6 +34,7 @@ class ProductionConfig:
     SECURITY_USERNAME_ENABLE = True
     SECURITY_USERNAME_REQUIRED = True
     SECURITY_CONFIRMABLE = False
+    SECURITY_SEND_REGISTER = False
     MAIL_SERVER = "smtp.gmail.com"
     MAIL_PORT = 465
     MAIL_USE_SSL = True
