@@ -32,6 +32,19 @@ def articles():
     return render_template("blog/articles.html", all_posts=all_posts, user=current_user)
 
 
+# SEARCH VIEW
+@bp.route("/search")
+def search():
+    query = request.args.get("q", "")
+    if query:
+        all_posts = Post.query.filter(
+            (Post.title.ilike(f"%{query}%")) | (Post.content.ilike(f"%{query}%"))
+        ).all()
+    else:
+        all_posts = []
+    return render_template("blog/search.html", all_posts=all_posts, query=query, user=current_user)
+
+
 # NEW POST VIEW
 @bp.route("/new", methods=["GET"])
 @auth_required()
