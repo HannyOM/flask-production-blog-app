@@ -33,7 +33,7 @@ class User(db.Model, UserMixin):
     password: Mapped[str] = mapped_column(db.String(255), nullable=False)           # type: ignore
     active: Mapped[bool] = mapped_column(default=True)           # type: ignore
     fs_uniquifier: Mapped[str] = mapped_column(db.String(255), unique=True, nullable=False)           # type: ignore
-    confirmed_at: Mapped[datetime | None] = mapped_column(db.DateTime, nullable=True)           # type: ignore
+    confirmed_at: Mapped[datetime] = mapped_column(db.DateTime, nullable=False)           # type: ignore
     roles: Mapped[List[Role]] = relationship(secondary=roles_users, back_populates="users")           # type: ignore
     posts: Mapped[List[Post]] = relationship(backref="author", lazy=True)
 
