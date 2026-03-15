@@ -2,7 +2,7 @@
 set -e
 
 echo "Running database migrations..."
-flask db upgrade 0001_initial
+flask db upgrade head
 
 echo "Starting Gunicorn..."
 exec gunicorn --bind 0.0.0.0:$PORT --workers 4 --timeout 120 --pythonpath /app wsgi:app
