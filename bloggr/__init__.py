@@ -4,8 +4,7 @@ from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_security.core import Security
-from flask_security.datastore import SQLAlchemyUserDatastore 
-from flask_mail import Mail
+from flask_security.datastore import SQLAlchemyUserDatastore
 
 
 load_dotenv()
@@ -13,7 +12,6 @@ load_dotenv()
 # Instantiate extensions (without app object).
 db = SQLAlchemy()                   
 migrate = Migrate()
-mail = Mail()
 
 
 class ProductionConfig:
@@ -35,12 +33,8 @@ class ProductionConfig:
     SECURITY_USERNAME_REQUIRED = True
     SECURITY_CONFIRMABLE = True
     SECURITY_SEND_REGISTER = True
-    MAIL_SERVER = "smtp.gmail.com"
-    MAIL_PORT = 587
-    MAIL_USE_TLS = True
-    MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
-    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
-    MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER")
+    RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
+    RESEND_FROM_EMAIL = os.environ.get("RESEND_FROM_EMAIL")
 
 
 class DevelopmentConfig(ProductionConfig):
@@ -73,14 +67,17 @@ def create_app(config_class=None, test_config=None):
     # Initialize extensions (with app object).
     db.init_app(app)
     migrate.init_app(app, db)
-    mail.init_app(app)
+
+    from .email_service import email_service
+    email_service.init_app(app)
 
     # Import models to create tables in database.
     from .models import User, Role, Post
 
     # Setup Flask-Security
+    from .email_service import ResendMailUtil
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-    security = Security(app, user_datastore)
+    security = Security(app, user_datastore, mail_util_cls=ResendMailUtil)
 
     # Fix for Flask-Security 5.x: @auth_required() doesn't recognize password
     # authentication as session auth. This sets fs_authn_via in each request
