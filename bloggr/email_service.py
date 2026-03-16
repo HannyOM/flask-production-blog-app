@@ -44,7 +44,7 @@ class ResendMailUtil(MailUtil):
         formatted_sender = self._format_sender(sender)
         self._email_service.send_email(
             to=[recipient] if isinstance(recipient, str) else recipient,
-            subject=subject,
+            subject=str(subject),
             html=html or body,
             from_email=formatted_sender,
         )
@@ -61,11 +61,12 @@ class ResendMailUtil(MailUtil):
         to = list(msg.send_to) if hasattr(msg, "send_to") else []
         if not to:
             return
+        formatted_sender = self._format_sender(msg.sender)
         self._email_service.send_email(
             to=to,
-            subject=msg.subject,
+            subject=str(msg.subject),
             html=msg.body,
-            from_email=msg.sender,
+            from_email=formatted_sender,
         )
 
 
