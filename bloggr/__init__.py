@@ -33,6 +33,7 @@ class ProductionConfig:
     SECURITY_USERNAME_REQUIRED = True
     SECURITY_CONFIRMABLE = True
     SECURITY_SEND_REGISTER = True
+    SECURITY_EMAIL_SENDER = os.environ.get("RESEND_FROM_EMAIL")
     RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
     RESEND_FROM_EMAIL = os.environ.get("RESEND_FROM_EMAIL")
 
