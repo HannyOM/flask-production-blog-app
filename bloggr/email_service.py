@@ -40,14 +40,12 @@ class ResendMailUtil(MailUtil):
         self._email_service = ResendEmailService()
         self._email_service.init_app(app)
 
-    def send_mail(self, template_name, subject, from_email, to, **kwargs):
-        body = kwargs.get("body")
-        html = kwargs.get("html", body)
+    def send_mail(self, template, subject, recipient, sender, body, html, **kwargs):
         self._email_service.send_email(
-            to=[to] if isinstance(to, str) else to,
+            to=[recipient] if isinstance(recipient, str) else recipient,
             subject=subject,
-            html=html,
-            from_email=from_email,
+            html=html or body,
+            from_email=sender,
         )
 
     def send_message(self, msg):
