@@ -41,12 +41,21 @@ class ResendMailUtil(MailUtil):
         self._email_service.init_app(app)
 
     def send_mail(self, template, subject, recipient, sender, body, html, **kwargs):
+        formatted_sender = self._format_sender(sender)
         self._email_service.send_email(
             to=[recipient] if isinstance(recipient, str) else recipient,
             subject=subject,
             html=html or body,
-            from_email=sender,
+            from_email=formatted_sender,
         )
+
+    def _format_sender(self, sender):
+        if sender is None:
+            return self._email_service.from_email
+        if isinstance(sender, tuple):
+            name, email = sender
+            return f"{name} <{email}>" if name else email
+        return sender
 
     def send_message(self, msg):
         to = list(msg.send_to) if hasattr(msg, "send_to") else []
