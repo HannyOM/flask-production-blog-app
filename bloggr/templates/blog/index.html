@@ -105,7 +105,7 @@
                         </a>
                     </h1>
                     <p class="text-gray-600 text-lg line-clamp-3">
-                        {{ featured_post.content[:200] }}{% if featured_post.content|length > 200 %}...{% endif %}
+                        {{ (featured_post.content|striptags)[:200] }}{% if featured_post.content|length > 200 %}...{% endif %}
                     </p>
                     <div class="flex items-center space-x-4 pt-2">
                         <div class="flex items-center space-x-2">
