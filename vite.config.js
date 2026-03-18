@@ -4,6 +4,7 @@ import { resolve } from "path";
 export default defineConfig({
   build: {
     outDir: "bloggr/static",
+    emptyOutDir: false,
     lib: {
       entry: resolve(__dirname, "bloggr/static/js/editor.js"),
       name: "Editor",
