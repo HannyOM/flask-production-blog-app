@@ -9,4 +9,5 @@ dist/
 build/
 *.egg-info/
 .env
-.vscode/node_modules/
+.vscode/
+node_modules/
