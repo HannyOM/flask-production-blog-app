@@ -86,9 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
           case "codeBlock":
             editor.chain().focus().toggleCodeBlock().run();
             break;
-          case "paragraph":
-            editor.chain().focus().setParagraph().run();
-            break;
+
           case "heading":
             const level = parseInt(button.dataset.level || "1", 10);
             editor.chain().focus().toggleHeading({ level }).run();
