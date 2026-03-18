@@ -20,7 +20,7 @@ COPY tailwind.config.js postcss.config.js ./
 COPY start.sh ./
 
 RUN pip install --no-cache-dir -e . && \
-    npm ci --only=production=false && \
+    npm ci --only=production=false --ignore-scripts && \
     npm run build-css
 
 ENV FLASK_ENV=production
