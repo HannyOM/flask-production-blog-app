@@ -72,26 +72,6 @@
                     <label for="post_content" class="block text-sm font-medium text-gray-700 mb-2">Content</label>
                     <div id="editor-new" class="tiptap-editor border border-gray-300 rounded-lg overflow-hidden">
                         <div class="editor-toolbar bg-gray-50 border-b border-gray-200 p-2 flex flex-wrap gap-1">
-                            <select data-command="fontFamily" class="mr-1" title="Font Family">
-                                <option value="">Font</option>
-                                <option value="Arial">Arial</option>
-                                <option value="Helvetica">Helvetica</option>
-                                <option value="Georgia">Georgia</option>
-                                <option value="Times New Roman">Times New Roman</option>
-                                <option value="Lucida Sans Unicode">Lucida Sans Unicode</option>
-                            </select>
-                            <select data-command="fontSize" class="mr-1" title="Font Size">
-                                <option value="">Size</option>
-                                <option value="12px">12px</option>
-                                <option value="14px">14px</option>
-                                <option value="16px">16px</option>
-                                <option value="18px">18px</option>
-                                <option value="20px">20px</option>
-                                <option value="24px">24px</option>
-                                <option value="28px">28px</option>
-                                <option value="32px">32px</option>
-                                <option value="36px">36px</option>
-                            </select>
                             <div class="w-px h-6 bg-gray-300 mx-1"></div>
                             <button type="button" data-command="bold" title="Bold (Ctrl+B)">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"/></svg>
@@ -102,18 +82,12 @@
                             <button type="button" data-command="underline" title="Underline (Ctrl+U)">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v7a5 5 0 0010 0V4M5 20h14"/></svg>
                             </button>
-                            <button type="button" data-command="strike" title="Strikethrough">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v4m0 4v8M4 12h16"/></svg>
-                            </button>
                             <button type="button" data-command="code" title="Inline Code">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
                             </button>
                             <div class="w-px h-6 bg-gray-300 mx-1"></div>
                             <button type="button" data-command="link" title="Add Link">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-                            </button>
-                            <button type="button" data-command="image" title="Add Image">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                             </button>
                             <div class="w-px h-6 bg-gray-300 mx-1"></div>
                             <button type="button" data-command="alignLeft" title="Align Left">
@@ -156,9 +130,6 @@
                             </button>
                             <button type="button" data-command="blockquote" title="Blockquote">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
-                            </button>
-                            <button type="button" data-command="codeBlock" title="Code Block">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
                             </button>
                             <button type="button" data-command="horizontalRule" title="Horizontal Rule">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/></svg>
