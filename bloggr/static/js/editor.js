@@ -109,12 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
               editor.chain().focus().setLink({ href: url }).run();
             }
             break;
-          case "image":
-            const imageUrl = prompt("Enter image URL:");
-            if (imageUrl) {
-              editor.chain().focus().setImage({ src: imageUrl }).run();
-            }
-            break;
           case "alignLeft":
             editor.chain().focus().setTextAlign("left").run();
             break;
