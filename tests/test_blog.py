@@ -173,3 +173,22 @@ def test_profile_edit_validates_required_fields(client, create_user, auth):
 
     response = client.post("/profile/edit", data={"username": "testuser", "email": ""})
     assert b"Email is required" in response.data
+
+
+# API tests
+def test_get_user_api(client, create_user, auth, app):
+    username, password, user, email, fs_uniquifier = create_user
+    auth.login()
+    response = client.get(f"/api/user/{user.id}")
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["username"] == username
+    assert "joined" in data
+    assert "roles" in data
+    assert "post_count" in data
+
+
+def test_get_user_api_not_found(client, create_user, auth):
+    auth.login()
+    response = client.get("/api/user/99999")
+    assert response.status_code == 404

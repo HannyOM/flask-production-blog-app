@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, abort
+from flask import Blueprint, render_template, request, flash, redirect, url_for, abort, jsonify
 from .models import Post
 from flask_security.decorators import auth_required, roles_accepted
 from flask_login import current_user
@@ -6,33 +6,27 @@ from . import db
 from datetime import date
 
 
-# Define the blueprint
-bp = Blueprint("blog",          # Names the blueprint. 
-               __name__)            # Lets the blueprint know where it is defined.
+bp = Blueprint("blog", __name__)
 
 
-# INDEX VIEW
 @bp.route("/")
 def index():
     all_posts = Post.query.all()
     return render_template("blog/index.html", all_posts=all_posts, user=current_user)
 
 
-# POST VIEW
 @bp.route("/post/<int:post_id>")
 def post(post_id):
     post = db.get_or_404(Post, post_id)
     return render_template("blog/post.html", post=post, user=current_user)
 
 
-# ARTICLES VIEW
 @bp.route("/articles")
 def articles():
     all_posts = Post.query.all()
     return render_template("blog/articles.html", all_posts=all_posts, user=current_user)
 
 
-# SEARCH VIEW
 @bp.route("/search")
 def search():
     query = request.args.get("q", "")
@@ -45,7 +39,6 @@ def search():
     return render_template("blog/search.html", all_posts=all_posts, query=query, user=current_user)
 
 
-# NEW POST VIEW
 @bp.route("/new", methods=["GET"])
 @auth_required()
 @roles_accepted("admin", "editor")
@@ -53,16 +46,15 @@ def new():
     return render_template("blog/new.html")
 
 
-# ADD POST VIEW
 @bp.route("/add", methods=["GET", "POST"])
 @auth_required()
 def add():
-    if request.method == "POST":            # Gets the user input.
+    if request.method == "POST":
         title = request.form.get("post_title")
         content = request.form.get("post_content")
         error = None
         
-        if not title:           # Ensures the user has inputted something.
+        if not title:
             error = "Title is required."
         elif not content:
             error = "Content is required."
@@ -71,24 +63,22 @@ def add():
             error_msg = flash(error)
             return render_template("blog/new.html", error_msg=error_msg)
         else:
-            new_content = Post(title=title, content=content,author_id=current_user.id, date=date.today()) #type: ignore            # Updates the database with the user's input.
+            new_content = Post(title=title, content=content, author_id=current_user.id, date=date.today())
             db.session.add(new_content)
             db.session.commit()
             return redirect(url_for("blog.index"))
     return render_template("blog/new.html")
 
 
-# EDIT POST VIEW
 @bp.route("/edit/<int:post_id>", methods=["GET", "POST"])
 @auth_required()
 def edit(post_id):
     editing_post = db.get_or_404(Post, post_id)
-    if editing_post.author_id != current_user.id: # type: ignore
+    if editing_post.author_id != current_user.id:
         abort(403)
     return render_template("blog/edit.html", editing_post=editing_post)
 
 
-# SAVE POST VIEW
 @bp.route("/save/<int:post_id>", methods=["POST"])
 @auth_required()
 def save(post_id):
@@ -105,20 +95,19 @@ def save(post_id):
 
         if error is not None:
             error_msg = flash(error)
-            return render_template("blog/edit.html", editing_post=editing_post, error_msg=error_msg) # type: ignore
+            return render_template("blog/edit.html", editing_post=editing_post, error_msg=error_msg)
         else:
-            editing_post.title = new_title # type: ignore
-            editing_post.content = new_content # type: ignore
+            editing_post.title = new_title
+            editing_post.content = new_content
             db.session.commit()
     return redirect(url_for("blog.index"))
 
 
-# DELETE POST VIEW
 @bp.route("/delete/<int:post_id>", methods=["GET"])
 @auth_required()
 def delete(post_id):
     deleting_post = db.get_or_404(Post, post_id)
-    if deleting_post.author_id != current_user.id: # type: ignore
+    if deleting_post.author_id != current_user.id:
         abort(403)
     else:    
         db.session.delete(deleting_post)
@@ -126,7 +115,6 @@ def delete(post_id):
     return redirect(url_for("blog.index"))
 
 
-# PROFILE VIEW
 @bp.route("/profile/<username>")
 def profile(username):
     from .models import User
@@ -135,7 +123,6 @@ def profile(username):
     return render_template("blog/profile.html", profile_user=profile_user, posts=user_posts)
 
 
-# EDIT PROFILE VIEW
 @bp.route("/profile/edit", methods=["GET", "POST"])
 @auth_required()
 def edit_profile():
@@ -160,3 +147,16 @@ def edit_profile():
         return redirect(url_for("blog.profile", username=current_user.username))
 
     return render_template("blog/edit_profile.html")
+
+
+@bp.route("/api/user/<int:user_id>")
+def get_user(user_id):
+    from .models import User
+    user = db.get_or_404(User, user_id)
+    post_count = Post.query.filter_by(author_id=user.id).count()
+    return jsonify({
+        "username": user.username,
+        "joined": user.confirmed_at.strftime("%B %d, %Y") if user.confirmed_at else "Unknown",
+        "roles": [role.name for role in user.roles],
+        "post_count": post_count
+    })

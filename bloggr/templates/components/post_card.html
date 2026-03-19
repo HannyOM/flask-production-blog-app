@@ -12,7 +12,7 @@
         {{ (post.content|striptags)[:150] }}{% if post.content|length > 150 %}...{% endif %}
     </p>
     <div class="flex items-center justify-between pt-3 border-t border-gray-100">
-        <div class="flex items-center space-x-2">
+        <div class="user-card-trigger flex items-center space-x-2" data-user-id="{{ post.author.id }}">
             <div class="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center">
                 <span class="text-xs font-medium text-gray-600">
                     {{ post.author.username[0]|upper }}

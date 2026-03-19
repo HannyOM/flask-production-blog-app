@@ -97,6 +97,106 @@
     <div class="relative z-10">
     {% block content %}{% endblock %}
     </div>
+
+    <!-- User Card Popup -->
+    <div id="user-card-popup" class="fixed z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl border border-gray-200 p-4 w-72" id="user-card-content">
+            <button type="button" id="user-card-close" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <div class="flex items-center space-x-3 mb-3">
+                <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                    <span id="popup-avatar" class="text-lg font-medium text-gray-600"></span>
+                </div>
+                <div class="min-w-0">
+                    <p id="popup-username" class="font-semibold text-black truncate"></p>
+                    <p id="popup-joined" class="text-xs text-gray-500"></p>
+                </div>
+            </div>
+            <div id="popup-roles" class="flex flex-wrap gap-1 mb-3"></div>
+            <p id="popup-post-count" class="text-sm text-gray-600 mb-3"></p>
+            <a id="popup-link" href="#" class="block w-full text-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                View Profile
+            </a>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const popup = document.getElementById('user-card-popup');
+        const popupContent = document.getElementById('user-card-content');
+        const closeBtn = document.getElementById('user-card-close');
+        const triggers = document.querySelectorAll('.user-card-trigger');
+
+        function showPopup(trigger) {
+            const userId = trigger.dataset.userId;
+            if (!userId) return;
+
+            fetch('/api/user/' + userId)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('popup-avatar').textContent = data.username[0].toUpperCase();
+                    document.getElementById('popup-username').textContent = data.username;
+                    document.getElementById('popup-joined').textContent = 'Joined ' + data.joined;
+                    document.getElementById('popup-link').href = '/profile/' + data.username;
+                    document.getElementById('popup-post-count').textContent = data.post_count + ' article' + (data.post_count !== 1 ? 's' : '');
+
+                    const rolesContainer = document.getElementById('popup-roles');
+                    rolesContainer.innerHTML = '';
+                    data.roles.forEach(role => {
+                        const span = document.createElement('span');
+                        span.className = 'px-2 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded';
+                        span.textContent = role;
+                        rolesContainer.appendChild(span);
+                    });
+
+                    const rect = trigger.getBoundingClientRect();
+                    const popupRect = popupContent.getBoundingClientRect();
+                    let top = rect.bottom + 8;
+                    let left = rect.left;
+
+                    if (top + popupRect.height > window.innerHeight) {
+                        top = rect.top - popupRect.height - 8;
+                    }
+                    if (left + popupRect.width > window.innerWidth) {
+                        left = window.innerWidth - popupRect.width - 16;
+                    }
+
+                    popup.style.top = top + 'px';
+                    popup.style.left = left + 'px';
+                    popup.classList.remove('hidden');
+                });
+        }
+
+        function hidePopup() {
+            popup.classList.add('hidden');
+        }
+
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                showPopup(this);
+            });
+        });
+
+        closeBtn.addEventListener('click', hidePopup);
+
+        document.addEventListener('click', function(e) {
+            if (!popup.contains(e.target) && !e.target.closest('.user-card-trigger')) {
+                hidePopup();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hidePopup();
+            }
+        });
+    });
+    </script>
 </body>
 
 </html>

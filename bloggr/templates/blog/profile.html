@@ -100,12 +100,13 @@
             <article class="bg-white rounded-lg border border-gray-200 p-6 hover:border-gray-300 transition-colors">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-4">
-                        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                        <div class="user-card-trigger w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center cursor-pointer" data-user-id="{{ profile_user.id }}">
                             <span class="text-sm font-medium text-gray-600">
                                 {{ profile_user.username[0]|upper }}
                             </span>
                         </div>
-                        <div>
+                        <div class="user-card-trigger cursor-pointer" data-user-id="{{ profile_user.id }}">
+                            <p class="text-sm font-medium text-black">{{ profile_user.username }}</p>
                             <p class="text-sm text-gray-500">{{ post.date.strftime("%B %d, %Y") }}</p>
                         </div>
                     </div>
