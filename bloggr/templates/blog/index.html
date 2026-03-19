@@ -30,6 +30,8 @@
                     {% if user.is_authenticated %}
                     <a href="{{ url_for('blog.new') }}" class="text-gray-600 hover:text-black transition-colors">New
                         Post</a>
+                    <a href="{{ url_for('blog.profile', username=user.username) }}"
+                        class="text-gray-600 hover:text-black transition-colors">Profile</a>
                     <a href="{{ url_for('security.logout') }}"
                         class="text-gray-600 hover:text-black transition-colors">Logout</a>
                     {% else %}
@@ -60,6 +62,8 @@
                     class="block px-3 py-2 text-gray-600 hover:text-black">Articles</a>
                 {% if user.is_authenticated %}
                 <a href="{{ url_for('blog.new') }}" class="block px-3 py-2 text-gray-600 hover:text-black">New Post</a>
+                <a href="{{ url_for('blog.profile', username=user.username) }}"
+                    class="block px-3 py-2 text-gray-600 hover:text-black">Profile</a>
                 <a href="{{ url_for('security.logout') }}"
                     class="block px-3 py-2 text-gray-600 hover:text-black">Logout</a>
                 {% else %}

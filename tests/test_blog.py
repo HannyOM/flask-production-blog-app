@@ -123,3 +123,53 @@ def test_delete(client, create_user, auth, app):
     with app.app_context():
         count = Post.query.count()
         assert count == 0
+
+
+# Profile page tests
+def test_profile_page(client, create_user, auth):
+    username, password, user, email, fs_uniquifier = create_user
+    auth.login()
+    response = client.get(f"/profile/{username}")
+    assert response.status_code == 200
+    assert username.encode() in response.data
+    assert email.encode() in response.data
+
+
+def test_profile_page_not_found(client, create_user, auth):
+    auth.login()
+    response = client.get("/profile/nonexistent_user")
+    assert response.status_code == 404
+
+
+def test_profile_edit_requires_auth(client):
+    response = client.get("/profile/edit")
+    assert response.headers["Location"].startswith("/login")
+
+
+def test_profile_edit_page(client, create_user, auth):
+    auth.login()
+    response = client.get("/profile/edit")
+    assert response.status_code == 200
+    assert b"Edit Profile" in response.data
+
+
+def test_profile_edit_saves_changes(client, create_user, auth, app):
+    username, password, user, email, fs_uniquifier = create_user
+    auth.login()
+    response = client.post("/profile/edit", data={"username": "new_username", "email": "new@example.com"},
+                          follow_redirects=True)
+    assert response.status_code == 200
+    with app.app_context():
+        from bloggr.models import User
+        updated_user = User.query.filter_by(username="new_username").first()
+        assert updated_user is not None
+        assert updated_user.email == "new@example.com"
+
+
+def test_profile_edit_validates_required_fields(client, create_user, auth):
+    auth.login()
+    response = client.post("/profile/edit", data={"username": "", "email": "test@example.com"})
+    assert b"Username is required" in response.data
+
+    response = client.post("/profile/edit", data={"username": "testuser", "email": ""})
+    assert b"Email is required" in response.data

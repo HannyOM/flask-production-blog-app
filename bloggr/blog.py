@@ -124,3 +124,39 @@ def delete(post_id):
         db.session.delete(deleting_post)
         db.session.commit()
     return redirect(url_for("blog.index"))
+
+
+# PROFILE VIEW
+@bp.route("/profile/<username>")
+def profile(username):
+    from .models import User
+    profile_user = User.query.filter_by(username=username).first_or_404()
+    user_posts = Post.query.filter_by(author_id=profile_user.id).all()
+    return render_template("blog/profile.html", profile_user=profile_user, posts=user_posts)
+
+
+# EDIT PROFILE VIEW
+@bp.route("/profile/edit", methods=["GET", "POST"])
+@auth_required()
+def edit_profile():
+    if request.method == "POST":
+        new_username = request.form.get("username")
+        new_email = request.form.get("email")
+        error = None
+
+        if not new_username:
+            error = "Username is required."
+        elif not new_email:
+            error = "Email is required."
+
+        if error is not None:
+            flash(error)
+            return render_template("blog/edit_profile.html")
+
+        current_user.username = new_username
+        current_user.email = new_email
+        db.session.commit()
+        flash("Profile updated successfully.")
+        return redirect(url_for("blog.profile", username=current_user.username))
+
+    return render_template("blog/edit_profile.html")
