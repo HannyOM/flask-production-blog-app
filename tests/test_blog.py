@@ -192,3 +192,107 @@ def test_get_user_api_not_found(client, create_user, auth):
     auth.login()
     response = client.get("/api/user/99999")
     assert response.status_code == 404
+
+
+# Draft/Publish tests
+def test_add_post_creates_draft_by_default(client, create_user, auth, app):
+    auth.login()
+    client.post("/add", data={"post_title": "Draft Title", "post_content": "Draft content"})
+    with app.app_context():
+        post = Post.query.first()
+        assert post.is_published is False
+
+
+def test_add_post_with_publish(client, create_user, auth, app):
+    auth.login()
+    client.post("/add", data={"post_title": "Published Title", "post_content": "Published content", "publish_now": "on"})
+    with app.app_context():
+        post = Post.query.first()
+        assert post.is_published is True
+
+
+def test_drafts_not_shown_on_index(client, create_user, auth, app):
+    auth.login()
+    client.post("/add", data={"post_title": "Draft Post", "post_content": "Draft content"})
+    response = client.get("/")
+    assert b"Draft Post" not in response.data
+
+
+def test_published_posts_shown_on_index(client, create_user, auth, app):
+    auth.login()
+    client.post("/add", data={"post_title": "Published Post", "post_content": "Published content", "publish_now": "on"})
+    response = client.get("/")
+    assert b"Published Post" in response.data
+
+
+def test_drafts_not_shown_on_articles(client, create_user, auth, app):
+    auth.login()
+    client.post("/add", data={"post_title": "Draft Article", "post_content": "Draft content"})
+    response = client.get("/articles")
+    assert b"Draft Article" not in response.data
+
+
+def test_drafts_shown_on_author_profile(client, create_user, auth, app):
+    username, password, user, email, fs_uniquifier = create_user
+    auth.login()
+    client.post("/add", data={"post_title": "My Draft", "post_content": "Draft content"})
+    response = client.get(f"/profile/{username}")
+    assert b"My Draft" in response.data
+    assert b"Draft" in response.data
+
+
+def test_unpublished_post_returns_404_to_non_author(client, create_user, create_user2, auth, app, db):
+    username, password, user, email, fs_uniquifier = create_user
+    username2, password2, user2, email2, fs_uniquifier2 = create_user2
+
+    auth.login()
+    client.post("/add", data={"post_title": "Draft Post", "post_content": "Draft content"})
+    auth.logout()
+
+    auth.login(username2, password2)
+    response = client.get("/post/1")
+    assert response.status_code == 404
+
+
+def test_author_can_view_own_draft(client, create_user, auth, app):
+    auth.login()
+    client.post("/add", data={"post_title": "My Draft", "post_content": "Draft content"})
+    response = client.get("/post/1")
+    assert response.status_code == 200
+    assert b"My Draft" in response.data
+
+
+def test_edit_post_can_publish_draft(client, create_user, auth, app):
+    auth.login()
+    client.post("/add", data={"post_title": "Draft to Publish", "post_content": "Content"})
+    with app.app_context():
+        post = Post.query.first()
+        assert post.is_published is False
+
+    client.post("/save/1", data={"new_post_title": "Draft to Publish", "new_post_content": "Content", "publish_now": "on"})
+    with app.app_context():
+        post = Post.query.first()
+        assert post.is_published is True
+
+
+def test_edit_post_can_unpublish(client, create_user, auth, app):
+    auth.login()
+    client.post("/add", data={"post_title": "Published Post", "post_content": "Content", "publish_now": "on"})
+    with app.app_context():
+        post = Post.query.first()
+        assert post.is_published is True
+
+    client.post("/save/1", data={"new_post_title": "Published Post", "new_post_content": "Content"})
+    with app.app_context():
+        post = Post.query.first()
+        assert post.is_published is False
+
+
+def test_search_only_finds_published_posts(client, create_user, auth, app):
+    auth.login()
+    client.post("/add", data={"post_title": "Secret Draft", "post_content": "Draft content"})
+    client.post("/add", data={"post_title": "Public Post", "post_content": "Published content", "publish_now": "on"})
+
+    response = client.get("/search?q=content")
+    assert b"Public Post" in response.data
+    assert b"Secret Draft" not in response.data

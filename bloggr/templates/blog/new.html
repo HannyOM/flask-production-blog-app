@@ -138,15 +138,22 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-end space-x-4">
-                    <a href="{{ url_for('blog.index') }}"
-                        class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                        Cancel
-                    </a>
-                    <button type="submit"
-                        class="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                        Publish
-                    </button>
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        <input type="checkbox" name="publish_now" id="publish_now"
+                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        <span class="text-sm text-gray-700">Publish now</span>
+                    </label>
+                    <div class="flex items-center space-x-4">
+                        <a href="{{ url_for('blog.index') }}"
+                            class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                            Cancel
+                        </a>
+                        <button type="submit"
+                            class="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                            Save Post
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

@@ -44,5 +44,6 @@ class Post(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(db.String(50), nullable=False)
     content: Mapped[str] = mapped_column(nullable=False)
-    author_id: Mapped[int] = mapped_column(db.ForeignKey("user.id"), nullable=False)            # "ForeignKey" points to the "id" column in the "User" table.
+    author_id: Mapped[int] = mapped_column(db.ForeignKey("user.id"), nullable=False)
     date: Mapped[datetime] = mapped_column(db.Date, nullable=False)
+    is_published: Mapped[bool] = mapped_column(default=False, nullable=False)

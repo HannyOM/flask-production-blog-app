@@ -138,15 +138,34 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-end space-x-4">
-                    <a href="{{ url_for('blog.post', post_id=editing_post.id) }}"
-                        class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                        Cancel
-                    </a>
-                    <button type="submit"
-                        class="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                        Save Changes
-                    </button>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        {% if not editing_post.is_published %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                            Draft
+                        </span>
+                        {% else %}
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            Published
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox" name="publish_now" id="publish_now"
+                                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                {% if editing_post.is_published %}checked{% endif %}>
+                            <span class="text-sm text-gray-700">Publish</span>
+                        </label>
+                        <a href="{{ url_for('blog.post', post_id=editing_post.id) }}"
+                            class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                            Cancel
+                        </a>
+                        <button type="submit"
+                            class="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                            Save Changes
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
